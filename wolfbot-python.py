@@ -25,7 +25,8 @@ def cargar_datos():
             temporal.append(row[o])
          candle.append(temporal) # coño, al fin un solo arreglo con toda la data!
    total = total - 1
-##### injerto
+
+##### injerto proveniente de naive_bayes.py
 
 def loadCsv(filename):
 	lines = csv.reader(open(filename, "r"))
@@ -211,7 +212,7 @@ predictions = getPredictions(summaries, testSet)
         
 accuracy = getAccuracy(testSet, predictions)
 predictions = getPredictions(summaries, inputtest)
-print("Accuracy: "+str(accuracy)+"%  Prediction: "+ str(predictions))
+print("Prediction: " + str(predictions) + " Accuracy: " + str(accuracy) + "%")
 #inputtest = [[9.120199999999386,13.120199999999386,-13.879800000000614,-11.879800000000614,9269410.0,2802,1]]
 #print(inputtest[0])
 
