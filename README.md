@@ -19,21 +19,21 @@ Una brevisima descripción de los archivos
             Aún así, un excelente ejercicio de programacion de inteligencia artificial asistida.
 
       wolfbot-irt.py
-            Ha de suponerse que este archivo revisa continuamente la base de datos en espera de una actualización  en tiempo
-         real. (IRT).
-            Cuando ocurre el evento, (por ahora, una vez cada 5 min.), éste pone en marcha los siguientes niveles del bot.
+            Ha  de suponerse que  este archivo revisa continuamente la base  de datos  en  espera  de  una
+         actualización en tiempo real. (IRT).
+            Cuando ocurre el evento, (por ahora, una vez cada 5 min.), éste pone en marcha los  siguientes
+         niveles del bot.
 
       wolfbot-python.py
-            Se supone que aqui ocurre la magia
-            Pero NO (todavia),  sólo  lee en la base  de datos y  genera los archivo "bitmex-5m.dat" y "bitmex.csv" con data 
-         pre-procesada  para un análisis  posterior (del cual no tengo idea  por ahora). En éste punto del desarrollo, tiene
-         empotrado  dentro del código de una manera  ex-tre-ma-da-men-te  cutre la implementación del clasificador bayesiano
-         ingenuo (naive-bayes) pero esa vaina va a salir de ahi quien sabe para donde. (continuará)... 
+            Se supone que aqui ocurre la magia.
+            Pero  NO (todavia), sólo lee  en la base de datos  y  genera  los  archivo  "bitmex-5m.dat"  y 
+         "bitmex.csv" con data pre-procesada para un análisis posterior (del cual no tengo idea de cómo lo
+         voy a hacer, por ahora).  En éste punto del desarrollo, tiene  empotrado dentro del código de una
+         manera   ex-tre-ma-da-men-te  cutre  la  implementación   del   clasificador   bayesiano  ingenuo
+         (naive-bayes) pero esa vaina va a salir de ahi quien sabe para donde. (continuará)... 
 
        getdata-5m.py
-            Con éste script pretendo bajarme la data desde bitmex y escribirla en una base de datos local de manera continua,
-         deberia estar ejecutandose desde el crontab, pero esa parte aun la debo 
-
-
+            Con éste script pretendo  bajarme la data desde bitmex y escribirla en una base de datos local
+         de manera continua, deberia estar ejecutandose desde el crontab, pero esa parte aun la debo.
 
 
