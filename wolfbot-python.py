@@ -1,3 +1,9 @@
+# he aqui quien procesa la data contenida
+# se puede usar IRT o Bactrace, dependiendo de el parametro que debe pasarse por la linea de cmandos
+# se pasa por parametro en la linea de comandos el unix time del punto a evaluar
+# por ahora, la base de datos esta escrita para almacenar velas en periodos de 5m, eso sera modificado (heredado del ancho de banda)
+
+
 import sqlite3
 import sys
 import csv
@@ -142,7 +148,6 @@ for n in range(0, total+1):
 bitmex_dat.close()
 
 
-
 #cochinon esta parte, solo me interesa que camine, la elegancia al carajo
 # timestamp, open, high, low, close, volume, vwp, trades 
 bitmex_pre = open("./bitmex-5m.csv", "w")
@@ -197,29 +202,14 @@ filename = 'bitmex-5m.csv'
 splitRatio = 0.67
 dataset = loadCsv(filename)
 trainingSet, testSet = splitDataset(dataset, splitRatio)
-
-filename = 'bitmex-5m.csv'
-splitRatio = 0.67
-dataset = loadCsv(filename)
-trainingSet, testSet = splitDataset(dataset, splitRatio)
-#print("split "+str(len(dataset))+" rows into train="+str(len(trainingSet))+" and test="+str(len(testSet))+" rows") 
 # prepare model
 summaries = summarizeByClass(trainingSet)
-#print(summaries)
 # test model
-#print(testSet)
 predictions = getPredictions(summaries, testSet)
         
 accuracy = getAccuracy(testSet, predictions)
 predictions = getPredictions(summaries, inputtest)
 print("Prediction: " + str(predictions) + " Accuracy: " + str(accuracy) + "%")
-#inputtest = [[9.120199999999386,13.120199999999386,-13.879800000000614,-11.879800000000614,9269410.0,2802,1]]
-#print(inputtest[0])
-
-
-
-
-
 exit()
 
 
