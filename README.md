@@ -1,4 +1,4 @@
-Esta coleccion de archivos se llama
+Esta coleccion de archivos pretende llamarse
 # WolfBot 
 o la brevisima historia de
 # Cómo no se me ocurrió un nombre mejor
@@ -7,6 +7,8 @@ Un intento por conseguir un bot para hacer transacciones en los exchanges con la
 Basado en python, shell scriting y sqlite3 
 
 Una brevisima descripción de los archivos
+
+
       README.md
             Este archivo que intenta (con muy poco éxito) hacer algo de documentación.
 
@@ -41,6 +43,4 @@ Una brevisima descripción de los archivos
          necearias  para la configuración  de los mismos y así  evitamos tener que  editar cada uno de los
          scripts para cabiar cualquier configuración (nada nuevo bajo el sol)
 
-#comentarios en el commit
-Actualizando el Readme
 
