@@ -8,14 +8,14 @@ Basado en python, shell scriting y sqlite3
 
 Una brevisima descripción de los archivos
       README.md
-            Este archivo que intenta (con muy poc éxito) hacer algo de documentación.
+            Este archivo que intenta (con muy poco éxito) hacer algo de documentación.
 
       bitmex-5m.csv
             Archivo de salida de wolfbot-python.py, está puesto aqui sólo con caracter didáctico.
             Ha de suponerse que archivos siilares a este se irán generando mientras el bot esté en marcha.
 
       naive_bayes.py
-            Un intento (un poc crudo aún de agregarle un predictor al bot, por ahora, no muy funcional.
+            Un intento, un poco crudo aún,  de agregarle un predictor al bot, por ahora, no muy funcional.
             Aún así, un excelente ejercicio de programacion de inteligencia artificial asistida.
 
       wolfbot-irt.py
@@ -36,4 +36,11 @@ Una brevisima descripción de los archivos
             Con éste script pretendo  bajarme la data desde bitmex y escribirla en una base de datos local
          de manera continua, deberia estar ejecutandose desde el crontab, pero esa parte aun la debo.
 
+       config.ini
+            El archivo  de configuración  general del sistema,  desde aqui se ajustan  todas las variables
+         necearias  para la configuración  de los mismos y así  evitamos tener que  editar cada uno de los
+         scripts para cabiar cualquier configuración (nada nuevo bajo el sol)
+
+#comentarios en el commit
+Actualizando el Readme
 

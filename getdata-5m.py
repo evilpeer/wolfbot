@@ -15,16 +15,34 @@ import sys
 import pycurl
 import io
 import json
+import configparser
+import io
+
+def load_ini():
+   with open("config.ini") as f:
+      file_config = f.read()
+   config = configparser.RawConfigParser(allow_no_value=True)
+   config.readfp(io.StringIO(file_config))
+   return config
 
 def time_format_8601(fecha):
    utc = str(datetime.utcfromtimestamp(fecha).isoformat())
    utc = utc[0:13] + "%3A" + utc[14:16] + "%3A" + utc[17:19] + ".000Z"
    return utc
 
-def getdata(utc):
+def getdata_bitmex(utc, symbol):
+
+   path = "/api/v1"
+   function = "trade/bucketed"
+   count = 1                            # numero de velas que me voy a arrastrar
+   partial = "false"
+   reverse = "false"
+   binsize = "5m"                       # options 1m, 5m, 1h     este deberia arrastrarmelo desde linea de comandos
+                                        # o mejor aun, traerme las velas de 1m y luego hacer la magia desde adentro
+
    headers = []
    buffer = io.BytesIO()
-   params = "binSize="+binsize+"&partial="+partial+"&symbol="+pair+"&count="+str(count)+"&reverse="+reverse+"&startTime="+utc
+   params = "binSize="+binsize+"&partial="+partial+"&symbol="+symbol+"&count="+str(count)+"&reverse="+reverse+"&startTime="+utc
    url = base_url + path + "/" + function + "?" + params
 #   nonce = nonc()
    headers.append('Connection: Keep-Alive')
@@ -49,42 +67,50 @@ def sql_open(db_file):
    conn = None
    try:
       conn = sqlite3.connect(db_file)
-   except Error as e:
+   except Exception as e:
       print(e)
    return conn
 
-def sql_put():
-   insertar = "INSERT INTO candles_"+pair+" (start, open, high, low, close, vwp, volume, trades) VALUES (?,?,?,?,?,?,?,?)"
+def sql_put(symbol):
+   insertar = "INSERT INTO "+db_name+symbol+" (start, open, high, low, close, vwp, volume, trades) VALUES (?,?,?,?,?,?,?,?)"
    values = (timestamp, datos["open"], datos["high"], datos["low"], datos["close"], datos["vwap"], datos["volume"],datos["trades"])
-   dbh = conn.cursor()
-   dbh.execute(insertar,values)
-#   resultado = dbh.execute(insertar,values)
-#   respuesta = resultado.fetchall()
-   conn.commit()                        # esta es la orden de escribir....
-# aqi hace falta una excepcion para cuando haya alguna falla en la escritura del registro
+   try:
+      dbh = conn.cursor()
+      dbh.execute(insertar,values)
+      conn.commit()                        # esta es la orden de escribir....
+   except Exception as e:                  # y este el manejo de la excepción
+      print("ERROR: no se pudo escribir en la base de datos")
+      print("SQL response: "+str(e))
    return
 
 
 ### main
-pair = "XBTUSD"                         # si voy a consultar alguna otra divisa, esto debe cambiarse segun se requiera
-local_path = "/home/tortuga/crypto/prices/tradebot/bitmex/bitmex-python-bot"
-dbfile = "/home/tortuga/crypto/prices/tradebot/bitmex/bitmex-bot/con_base_de_datos/bitmex-5m.db"
+                                        # ahora falta ver como manejar diferentes exchanges
+config = load_ini()                     # Leyendo el archivo de configuración y tomando los parametros correspondientes
+number_coins = int(config.get('exchange', 'pairs'))
+exchange = (config.get('exchange', 'name'))
+aviable_pairs = exchange+".pairs"
+coin = []
+for n in range(0, number_coins):
+   pair = "pair["+str(n+1)+"]"
+   coin.append(config.get(aviable_pairs,pair))
+local_path = (config.get('path', 'local_path'))
+db_path = (config.get('path', 'db_path'))
+db_file = (config.get('path', 'db_path'))+(config.get('exchange', 'db_file'))
+db_name = (config.get('sql', 'db_name'))
+                                        # para generalizarlo a diferentes exchanges, esto deberia cambiar tambien 
+                                        # porque cada exchange tiene su propia API
+base_url = "https://"+(config.get('exchange', 'server'))
 
-base_url = "https://www.bitmex.com"
-path = "/api/v1"
-function = "trade/bucketed"
-count = 1                               # numero de velas que me voy a arrastrar
-partial = "false"
-reverse = "false"
-binsize = "5m"                          # options 1m, 5m, 1h     este deberia arrastrarmelo desde linea de comandos
-                                        # o mejor aun, traerme las velas de 1m y luego hacer la magia desde adentro
+                                        # el verdadero catcher de datos empieza aqui
 
 timestamp = int(sys.argv[1])            # paso el valor del timestamp el cual voy a actualizar
                                         # con esto puedo arrastrar data historica o el ultimo dato acumulado, a convenir
 UTC = time_format_8601(timestamp)
-datos = getdata(UTC)
 
-conn = sql_open(dbfile)                 # abro la base de  datos
-sql_put()
-
-
+for n in range(0, number_coins):        # Puedo capturar datos de multiples monedas en un mismo exchange
+   datos = getdata_bitmex(UTC,coin[n])  # Esta funcion es especifica del exhange BITMEX y TESTNET, los otros requeriran otras funciones
+   print(datos)
+   conn = sql_open(db_file)             # abro la base de  datos
+   sql_put(coin[n])
+   # debo cerrar la base de datos

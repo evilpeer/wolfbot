@@ -9,20 +9,37 @@ import sys
 import csv
 import random
 import math
+import configparser
+import io
 
-def sql_query(siguiente):
-   buscar = "SELECT * FROM candles_" + str(pair) + " WHERE start = " + str(siguiente)
+def load_ini():
+   with open("config.ini") as f:
+      file_config = f.read()
+   config = configparser.RawConfigParser(allow_no_value=True)
+   config.readfp(io.StringIO(file_config))
+   return config
+
+def sql_open(db_file):
+   conn = None
+   try:
+      conn = sqlite3.connect(db_file)
+   except Exception as e:
+      print(e)
+   return conn
+
+def sql_query(siguiente, symbol):
+   buscar = "SELECT * FROM candles_" + str(symbol) + " WHERE start = " + str(siguiente)
    resultado = dbh.execute(buscar)
    return resultado
 
-def cargar_datos():
+def cargar_datos(symbol):
    global total
    global candle  #  Dentro de "candle" está la data en  este orden: timestamp, open, high, low, close, volume, vwp, trades 
    candle = []
    ultimo = date_last + 300
    total = 0
    for n in range(date_first, ultimo, 300):
-      respuesta = sql_query(n)
+      respuesta = sql_query(n, symbol)
       candles = respuesta.fetchall()
       total = total + 1
       for row in candles:
@@ -42,8 +59,8 @@ def loadCsv(filename):
 	return dataset
 
 def splitDataset(dataset, splitRatio):
-#	trainSize = int(len(dataset) * splitRatio)
-	trainSize = int(len(dataset) - 5)
+	trainSize = int(len(dataset) * splitRatio)
+#	trainSize = int(len(dataset) - 5)
 	trainSet = []
 	copy = list(dataset)
 	while len(trainSet) < trainSize:
@@ -121,20 +138,27 @@ def getAccuracy(testSet, predictions):
 
 ### main ###
 
-#esto deberia pasarlo desde un archivo de configuracion
-pair = "XBTUSD"
-local_path = "/home/tortuga/crypto/prices/tradebot/bitmex/bitmex-python-bot"
-dbfile = "/home/tortuga/crypto/prices/tradebot/bitmex/bitmex-bot/con_base_de_datos/bitmex-5m.db"
+config = load_ini()                     # Leyendo el archivo de configuración y tomando los parametros correspondientes
+number_coins = int(config.get('exchange', 'pairs'))
+exchange = (config.get('exchange', 'name'))
+aviable_pairs = exchange+".pairs"
+coin = []
+for n in range(0, number_coins):
+   pair = "pair["+str(n+1)+"]"
+   coin.append(config.get(aviable_pairs,pair))
+local_path = (config.get('path', 'local_path'))
+db_path = (config.get('path', 'db_path'))
+db_file = (config.get('path', 'db_path'))+(config.get('exchange', 'db_file'))
+db_name = (config.get('sql', 'db_name'))
 
-#abro la base de  datos
-conn = sqlite3.connect(dbfile)
+conn = sql_open(db_file)                # abro la base de  datos y consulto el ultimo registro
 dbh = conn.cursor()
+                                        # Se puede hacer como bactrace pasando el ultimo timestamp a analizar y real-time
+                                        # pasando el ultimo timestamp guardado
+date_last = int(sys.argv[1])            # paso el ultimo valor del timestamp a analizar
 
-# Se puede hacer como bactrace pasando el ultimo timestamp a analizar y real-time pasando el ultimo timestamp guardado
-date_last = int(sys.argv[1])   # paso el ultimo valor del timestamp a analizar
-
-date_first = date_last - 146700;  #un numero arbitrario por ahora
-cargar_datos()
+date_first = date_last - 146700;        # un numero arbitrario por ahora
+cargar_datos(coin[0])
 
 # esto esta aqui solo de adorno pa ver si funciona la vaina
 print(" timestamp    open    high     low   close    volume        vwp trades")
