@@ -45,7 +45,6 @@ for n in range(0, number_coins):
    pair = "pair["+str(n+1)+"]"
    coin.append(config.get(aviable_pairs,pair))
 local_path = (config.get('path', 'local_path'))
-db_path = (config.get('path', 'db_path'))
 db_file = (config.get('path', 'db_path'))+(config.get('exchange', 'db_file'))
 db_name = (config.get('sql', 'db_name'))
 
@@ -64,6 +63,8 @@ while count == 0:
       print(str(time.ctime(int(date_last))) + ' ' + str(fecha) )  
                                         # aqui es donde hago un llamado al sistema para ejecutar el wolfbot-python 
       llamada = "python3.4 ./wolfbot-python.py " + str(date_last)  
+      system(llamada)
+      llamada = "python3.4 ./naive_bayes.py " + str(date_last)  
       system(llamada)
 
 

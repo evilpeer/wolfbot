@@ -12,31 +12,39 @@ Una brevisima descripción de los archivos
       README.md
             Este archivo que intenta (con muy poco éxito) hacer algo de documentación.
 
-      bitmex-5m.csv
+      bitmex-5m.dat
             Archivo de salida de wolfbot-python.py, está puesto aqui sólo con caracter didáctico.
             Ha de suponerse que archivos siilares a este se irán generando mientras el bot esté en marcha.
 
       naive_bayes.py
             Un intento, un poco crudo aún,  de agregarle un predictor al bot, por ahora, no muy funcional.
             Aún así, un excelente ejercicio de programacion de inteligencia artificial asistida.
+            Ya  está tomando  del archivo  de configuración  los parametros necesarios  para su  ejecución
+         y recibiendo la llamada de ejecución desde el script principal.
+
 
       wolfbot-irt.py
             Ha  de suponerse que  este archivo revisa continuamente la base  de datos  en  espera  de  una
          actualización en tiempo real. (IRT).
             Cuando ocurre el evento, (por ahora, una vez cada 5 min.), éste pone en marcha los  siguientes
          niveles del bot.
+            Ya está tomando del archivo de configuración los parametros necesarios para su ejecución.
+            Tambien ejecuta de manera provisional el clasificador naive-bayes.
 
       wolfbot-python.py
             Se supone que aqui ocurre la magia.
-            Pero  NO (todavia), sólo lee  en la base de datos  y  genera  los  archivo  "bitmex-5m.dat"  y 
-         "bitmex.csv" con data pre-procesada para un análisis posterior (del cual no tengo idea de cómo lo
-         voy a hacer, por ahora).  En éste punto del desarrollo, tiene  empotrado dentro del código de una
-         manera   ex-tre-ma-da-men-te  cutre  la  implementación   del   clasificador   bayesiano  ingenuo
-         (naive-bayes) pero esa vaina va a salir de ahi quien sabe para donde. (continuará)... 
+            Pero  NO (todavia),  sólo lee en  la base de datos y genera  los  archivo "bitmex-5m.dat" para
+         procesar la data con un análisis posterior  (del cual no tengo idea  de cómo lo voy a  hacer, por
+         ahora).  Ya removí  del código el clasificador  bayesiano para  hacerlo  correr desde un  archivo
+         diferente.  En éste punto  sólo tengo la lectura  de la data de un período  específico, aunque se
+         debería poder ajustar el período de pre-procesamiento.
+            Ya  está tomando  del archivo  de configuración  los parametros necesarios  para su  ejecución
+         y recibiendo la llamada de ejecución desde el script principal.
 
        getdata-5m.py
             Con éste script pretendo  bajarme la data desde bitmex y escribirla en una base de datos local
          de manera continua, deberia estar ejecutandose desde el crontab, pero esa parte aun la debo.
+            Ya está tomando del archivo de configuración los parametros necesarios para su ejecución.
 
        config.ini
             El archivo  de configuración  general del sistema,  desde aqui se ajustan  todas las variables

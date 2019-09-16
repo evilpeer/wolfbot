@@ -59,8 +59,8 @@ def loadCsv(filename):
 	return dataset
 
 def splitDataset(dataset, splitRatio):
-	trainSize = int(len(dataset) * splitRatio)
-#	trainSize = int(len(dataset) - 5)
+#	trainSize = int(len(dataset) * splitRatio)
+	trainSize = int(len(dataset) - 5)
 	trainSet = []
 	copy = list(dataset)
 	while len(trainSet) < trainSize:
@@ -147,17 +147,17 @@ for n in range(0, number_coins):
    pair = "pair["+str(n+1)+"]"
    coin.append(config.get(aviable_pairs,pair))
 local_path = (config.get('path', 'local_path'))
-db_path = (config.get('path', 'db_path'))
 db_file = (config.get('path', 'db_path'))+(config.get('exchange', 'db_file'))
 db_name = (config.get('sql', 'db_name'))
 
 conn = sql_open(db_file)                # abro la base de  datos y consulto el ultimo registro
 dbh = conn.cursor()
-                                        # Se puede hacer como bactrace pasando el ultimo timestamp a analizar y real-time
-                                        # pasando el ultimo timestamp guardado
-date_last = int(sys.argv[1])            # paso el ultimo valor del timestamp a analizar
 
-date_first = date_last - 146700;        # un numero arbitrario por ahora
+
+# Se puede hacer como bactrace pasando el ultimo timestamp a analizar y real-time pasando el ultimo timestamp guardado
+date_last = int(sys.argv[1])   # paso el ultimo valor del timestamp a analizar
+
+date_first = date_last - 146700;         #un numero arbitrario por ahora
 cargar_datos(coin[0])
 
 # esto esta aqui solo de adorno pa ver si funciona la vaina
@@ -185,6 +185,21 @@ for n in range(0, total-9):
    linea = linea + "," + str(temp)
    temp =candle[n][4]-candle[n][6]  
    linea = linea + "," + str(temp) + "," + str(candle[n][5]) + "," + str(candle[n][7])
+#   print("linea1 "+linea)
+
+#   linea = ""
+
+#   temp =candle[n][1]-candle[n][6]  
+#   linea = linea + str(temp)
+
+#   for o in range(2, 4):
+#      temp =candle[n][o]-candle[n][6]  
+#      linea = linea + "," + str(temp)
+
+#   linea = linea + "," + str(temp) + "," + str(candle[n][5]) + "," + str(candle[n][7])
+      
+#   print("linea2 " +linea)
+
    for o in range(n, n+9):
       if candle[o][4] > (candle[n][4]+((candle[n][4]*0.5)/100)):
          flag = 1
@@ -194,11 +209,13 @@ for n in range(0, total-9):
          break
       flag = 0
    linea = linea + "," + (str(flag))
+
    bitmex_pre.write(str(linea) + '\n')
-bitmex_pre.close()
+
+#print(linea)
 
 
-
+#preparo el tuple de imput para el sistema
 dataset = []
 inputtest = []
 linea = ""
@@ -213,27 +230,35 @@ dataset.append(temp)
 linea = linea + "," + str(temp)
 temp =candle[total][4]-candle[total][6]  
 dataset.append(temp)
+linea = linea + "," + str(temp) + "," + str(candle[n][5]) + "," + str(candle[n][7])
+
 dataset.append(candle[total][5])
 dataset.append(candle[total][7])
 dataset.append(1)
 
-linea = linea + "," + str(temp) + "," + str(candle[total][5]) + "," + str(candle[total][7])
-linea = linea + "," + (str(flag))
 inputtest.append(dataset)
+#print(linea)
+#print(str(inputtest))
+
+bitmex_pre.close()
+
 
 ##### injerto
 filename = 'bitmex-5m.csv'
 splitRatio = 0.67
 dataset = loadCsv(filename)
 trainingSet, testSet = splitDataset(dataset, splitRatio)
+#print(str(len(dataset) - len(trainingSet)))
 # prepare model
 summaries = summarizeByClass(trainingSet)
 # test model
 predictions = getPredictions(summaries, testSet)
         
 accuracy = getAccuracy(testSet, predictions)
+
+#ejecuto prediccion
 predictions = getPredictions(summaries, inputtest)
-print("Prediction: " + str(predictions) + " Accuracy: " + str(accuracy) + "%")
+print("Prediction: " + str(predictions) + " Accuracy: " + str(accuracy) + "% tested:" + str(len(dataset) - len(trainingSet)) )
 exit()
 
 
