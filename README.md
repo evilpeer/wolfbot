@@ -51,4 +51,8 @@ Una brevisima descripción de los archivos
          necearias  para la configuración  de los mismos y así  evitamos tener que  editar cada uno de los
          scripts para cabiar cualquier configuración (nada nuevo bajo el sol)
 
+       create_table.py
+            Herramienta para crear el archivo de base de datos para nuestro sistema.
+            Por ahora  sólo crearé la base de  datos de bitmex, con períodos de  5 minutos y con todas los
+         criptoactivos que disponga bitmex en sus recursos
 
