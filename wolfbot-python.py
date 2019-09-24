@@ -62,7 +62,7 @@ for n in range(0, number_coins):
 local_path = (config.get('path', 'local_path'))
 db_file = (config.get('path', 'db_path'))+(config.get('exchange', 'db_file'))
 db_name = (config.get('sql', 'db_name'))
-
+print(local_path)
 conn = sql_open(db_file)                 # abro la base de  datos y consulto el ultimo registro
 dbh = conn.cursor()
                                          # Se puede hacer como bactrace pasando el ultimo timestamp a analizar y real-time
@@ -77,13 +77,27 @@ print(" timestamp    open    high     low   close    volume        vwp trades")
 print((str(candle[total][0]))+" "+(str(candle[total][1]))+" "+(str(candle[total][2]))+" "+(str(candle[total][3]))+" "+(str(candle[total][4]))+" "+(str(candle[total][5]))+" "+(str(candle[total][6]))+" "+(str(candle[total][7])))
 
                                          # ahora escribo el archivo que necesito para la grafica y los calculos que vienen 
-bitmex_dat = open("./bitmex-5m.dat", "w")
+datos = local_path + "bitmex-5m.dat"
+bitmex_dat = open(datos, "w")
 for n in range(0, total+1):
    linea = (str(candle[n][0])+","+str(candle[n][1])+","+str(candle[n][2])+","+str(candle[n][3])+","+str(candle[n][4])+","+str(candle[n][5])+","+str(candle[n][6])+","+str(candle[n][7]))
    bitmex_dat.write(str(linea) + '\n')
 bitmex_dat.close()
 exit()
 
+#falta traducir esta parte de perl a python, basicamente porque las herramientas no las he programado
+#   my $ema_backtrace = join "", ("/usr/bin/perl ", $local_path, "/ema-5m.pl "); 
+#   open(BACKTRACE,"|$ema_backtrace");
+#   close(BACKTRACE);
 
+#   my $image_backtrace = join "", ("/usr/bin/perl ", $local_path, "/image-5m.pl "); 
+#   open(BACKTRACE,"|$image_backtrace");
+#   close(BACKTRACE);
+#   if ($timestamp[$incremental] == $UNX_date_last){$ciclo = 1}
+#   $incremental++;
+#   sleep 2;
+#   }
+
+#exit();
 
 
