@@ -60,11 +60,11 @@ while count == 0:
    if date_last != ultimo:
       date_last = ultimo
       fecha = str(time.strftime("%H:%M:%S"))
-      print(str(time.ctime(int(date_last))) + ' ' + str(fecha) )  
+      print("\n" + str(time.ctime(int(date_last))) + ' ' + str(fecha) )  
                                         # aqui es donde hago un llamado al sistema para ejecutar el wolfbot-python 
-      llamada = "python3.4 ./wolfbot-python.py " + str(date_last)  
+      llamada = "python3.4 "+local_path+"wolfbot-python.py " + str(date_last) + "&"  
       system(llamada)
-      llamada = "python3.4 ./naive_bayes.py " + str(date_last)  
+      llamada = "python3.4 ./naive_bayes.py " + str(date_last) + "&"  
       system(llamada)
 
 
