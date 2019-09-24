@@ -56,3 +56,11 @@ Una brevisima descripción de los archivos
             Por ahora  sólo crearé la base de  datos de bitmex, con períodos de  5 minutos y con todas los
          criptoactivos que disponga bitmex en sus recursos
 
+       crontab-5m.sh
+            Un pequeño shell script para dispararlo desde el crontab cada 5 minutos
+
+       integridad-5m.py
+            Verifica la integridad de la  base de datos, busca y rellena  la data faltante  en caso de  que 
+         existan, no  es parte de  sistema y  debe ejecutarse  sólo en caso  de que existan estas faltas de 
+         continuidad.
+
