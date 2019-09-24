@@ -57,7 +57,7 @@ Una brevisima descripción de los archivos
          criptoactivos que disponga bitmex en sus recursos
 
        crontab-5m.sh
-            Un pequeño shell script para dispararlo desde el crontab cada 5 minutos
+            Un pequeño shell script para dispararlo desde el crontab cada 5 minutos. Hay que comprobarlo
 
        integridad-5m.py
             Verifica la integridad de la  base de datos, busca y rellena  la data faltante  en caso de  que 
