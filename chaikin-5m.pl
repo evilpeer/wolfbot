@@ -49,11 +49,43 @@ my @trades    = map {@$_[7]} @data;   #trades
 
 # Calcular  Chaikin
 calcular_chaikin();
+
 open LOG,">$local_path/data/chaikin-$binsize.dat"; 
-for (my $n=0; $n <= $total; $n++)
-{
-print LOG "$unx_dates[$n],$adosc[$n],0,0\n";
-}
+my $max_chaikin;
+my $min_chaikin;
+my $chaikin;
+
+for (my $n=0; $n <= 14; $n++)
+   {
+   $chaikin = 0;
+   print LOG "$unx_dates[$n],$chaikin,0,0\n";
+   }
+
+
+for (my $n=14; $n <= $total; $n++)
+   {
+#-178570908.136942×100÷200000000.49889
+# %K = (CLOSE - MIN (LOW (%K))) / (MAX (HIGH (%K)) - MIN (LOW (%K))) * 100
+# CLOSE – precio de cierre de hoy;
+# MIN (LOW (%K)) – el menor de los mínimos para el número de períodos %K;
+# MAX (HIGH (%K)) – el mayor de los máximos para el número de períodos %K.
+   my $max_chaikin = $adosc[$n-14];
+   my $min_chaikin = $adosc[$n-14];
+   for (my $p=($n-14); $p<=$n; $p++)
+      {
+      if (($adosc[$p]) < $min_chaikin) {$min_chaikin = $adosc[$p]}
+      if (($adosc[$p]) > $max_chaikin) {$max_chaikin = $adosc[$p]}
+      }
+   if (($max_chaikin eq 0 ) && ($min_chaikin eq 0) )
+      {
+      $chaikin = 0;
+      }
+   else
+      {
+      $chaikin = (($adosc[$n]-$min_chaikin) / ($max_chaikin-$min_chaikin))*100;
+      }
+   print LOG "$unx_dates[$n],$chaikin,0,0\n";
+   }
 close LOG;
 exit();
 
@@ -70,7 +102,6 @@ sub calcular_chaikin
 # returns: $outReal - reference to real values array
 
 # aqui ocurre la magia (tengo que averiguar cual es el numero de datos minimo para las condiciones dadas)
-#($retCode, $begIdx, $result) = TA_RSI(0, $#close, \@close, $rsi_period);
 ($retCode, $begIdx, $result) = TA_ADOSC(0, $#close, \@high, \@low, \@close, \@volume, $optInFastPeriod, $optInSlowPeriod);
 
 # compenso, desplazo e igualo los subindices de cada una de las respuestas
@@ -94,7 +125,7 @@ else
 $tmp = $total - $last + $begIdx - 1;
 for $n (0.. $tmp)
    {
-   $adosc[$n] = "";
+   $adosc[$n] = 0;
    }
 }
 
